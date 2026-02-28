@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KittyMind - Your Genius 3D Kitten</title>
+    <!-- Tailwind for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col h-screen w-full">
+
+    <!-- Background Blobs -->
+    <div class="mesh-gradient">
+        <div class="blob bg-rose-200 w-[60%] h-[60%] -top-[10%] -left-[10%]"></div>
+        <div class="blob bg-[#DFF7F2] w-[60%] h-[60%] -bottom-[10%] -right-[10%]"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="z-10 flex items-center justify-between px-6 py-4 glass border-b">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-rose-400 rounded-xl shadow-lg text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V3c0-1.1.9-2 2-2h1.5a2.5 2.5 0 0 1 0 5H14"/><path d="M9 3h1.5a2.5 2.5 0 0 0 0-5H9a2 2 0 0 0-2 2v2"/><path d="M20 12v2a8 8 0 0 1-16 0v-2"/><circle cx="12" cy="12" r="2"/><path d="M12 14v4"/><path d="M8 18h8"/><path d="M21 12h-2"/><path d="M5 12H3"/></svg>
+            </div>
+            <h1 class="text-xl font-extrabold text-slate-800 tracking-tight">KittyMind</h1>
+        </div>
+        <button id="muteBtn" class="p-2 rounded-full hover:bg-white/50 transition-colors text-slate-600">
+            <svg id="volIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+        </button>
+    </header>
+
+    <!-- Main Experience -->
+    <main class="flex-1 relative flex flex-col items-center justify-center overflow-hidden">
+        
+        <!-- Animated Kitty SVG -->
+        <div id="kittyWrapper" class="animate-float kitty-container relative">
+            <svg id="kittySvg" viewBox="0 0 200 200" width="320" height="320">
+                <path id="kittyTail" d="M 150 140 Q 180 100 160 80" stroke="#FFF6E9" stroke-width="12" fill="none" stroke-linecap="round" />
+                <circle id="kittyBody" cx="100" cy="130" r="50" fill="#FFF6E9" />
+                <g id="kittyHead">
+                    <circle id="kittySkull" cx="100" cy="70" r="45" fill="#FFF6E9" />
+                    <path d="M 65 40 L 50 10 L 85 35 Z" fill="#FFF6E9" />
+                    <path d="M 135 40 L 150 10 L 115 35 Z" fill="#FFF6E9" />
+                    <g id="kittyEyes">
+                        <circle id="leftEye" cx="80" cy="65" r="6" fill="#1a1a1a" />
+                        <circle id="rightEye" cx="120" cy="65" r="6" fill="#1a1a1a" />
+                    </g>
+                    <ellipse id="kittyMouth" cx="100" cy="85" rx="8" ry="3" fill="#FFB7C5" />
+                </g>
+            </svg>
+            <div id="kittyGlow" class="absolute inset-0 rounded-full blur-3xl opacity-30 -z-10 transition-colors duration-500 bg-[#FFF6E9]"></div>
+        </div>
+
+        <!-- Suggestion Chips -->
+        <div class="absolute top-8 left-1/2 -translate-x-1/2 z-10 flex gap-2 overflow-x-auto max-w-[90vw] no-scrollbar pb-2">
+            <button onclick="useChip('Help me solve $x^2 + 4x + 4 = 0$')" class="glass hover:bg-white px-4 py-2 rounded-full text-xs font-semibold text-slate-700 shadow-sm transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                <span>🧠 Math</span>
+            </button>
+            <button onclick="useChip('How do I make chocolate chip cookies?')" class="glass hover:bg-white px-4 py-2 rounded-full text-xs font-semibold text-slate-700 shadow-sm transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                <span>🍪 Recipe</span>
+            </button>
+            <button onclick="useChip('Tell me a cool fact about axolotls!')" class="glass hover:bg-white px-4 py-2 rounded-full text-xs font-semibold text-slate-700 shadow-sm transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                <span>🐾 Animals</span>
+            </button>
+        </div>
+
+        <!-- Chat Overlay -->
+        <div id="chatHistory" class="absolute right-6 bottom-32 w-80 max-h-[40vh] z-10 hidden lg:flex flex-col gap-3 overflow-y-auto no-scrollbar px-2"></div>
+    </main>
+
+    <!-- Chat Footer -->
+    <footer class="z-20 p-6 flex flex-col items-center">
+        <div class="w-full max-w-2xl glass rounded-[32px] p-2 shadow-2xl">
+            <div class="flex items-center gap-2">
+                <button class="p-4 rounded-full text-rose-400 hover:bg-rose-50 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
+                </button>
+                <input id="chatInput" type="text" placeholder="Ask me anything, meow..." class="flex-1 bg-transparent py-4 outline-none text-slate-700 font-medium">
+                <button id="sendBtn" class="p-4 rounded-2xl bg-rose-400 text-white transition-all shadow-md hover:bg-rose-500 active:scale-95">
+                    <svg id="sendIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    <div id="loadingIcon" class="hidden w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
